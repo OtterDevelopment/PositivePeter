@@ -1,4 +1,4 @@
-import { Intents, PermissionString } from "discord.js";
+import { Intents, PermissionString, PresenceData } from "discord.js";
 
 export default {
 	prefix: "s!",
@@ -8,7 +8,18 @@ export default {
 
 	supportServer: "https://discord.gg/VwMWj2B",
 	minimalInvite:
-		"https://discord.com/api/oauth2/authorize?client_id=696257723808874496&permissions=274878220288&scope=bot",
+		"https://discord.com/api/oauth2/authorize?client_id=696257723808874496&permissions=274878220288&scope=bot%20applications.commands",
+	gitHub: "https://github.com/OtterDevelopment/PositivePeter",
+
+	presence: {
+		status: "online",
+		activities: [
+			{
+				type: "LISTENING",
+				name: "users"
+			}
+		]
+	} as PresenceData,
 
 	hastebin: "https://h.inv.wtf",
 

@@ -6,15 +6,7 @@ const client = new BetterClient({
 	restTimeOffset: 10,
 	restGlobalRateLimit: 50,
 	invalidRequestWarningInterval: 500,
-	presence: {
-		status: "online",
-		activities: [
-			{
-				type: "WATCHING",
-				name: "messages"
-			}
-		]
-	},
+	presence: Config.presence,
 	intents: Config.intents
 });
 
