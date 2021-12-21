@@ -1,7 +1,6 @@
 import path from "path";
 import { MongoClient } from "mongodb";
 import Button from "../classes/Button.js";
-import { RegExpWorker } from "regexp-worker";
 import DropDown from "../classes/DropDown.js";
 import * as Logger from "../classes/Logger.js";
 import Config from "../../config/bot.config.js";
@@ -36,15 +35,12 @@ export default class BetterClient extends Client {
 	public stats: Stats;
 	public cachedStats: CachedStats;
 	public readonly __dirname: string;
-	public readonly regexWorker: RegExpWorker;
 	public readonly cache: Cache;
 	public readonly triggers: { suicide: string[]; compliments: Record<string, string[]> };
 	constructor(options: ClientOptions) {
 		super(options);
 
 		this.__dirname = path.resolve();
-
-		this.regexWorker = new RegExpWorker(100);
 
 		this.usersUsingBot = new Set();
 		this.config = Config;
@@ -140,20 +136,5 @@ export default class BetterClient extends Client {
 		});
 		this.cachedStats = reducedStats || this.cachedStats;
 		return reducedStats || this.cachedStats;
-	}
-
-	public async executeRegex(regex: RegExp, content: string) {
-		try {
-			const result = await this.regexWorker.execRegExp(regex, content);
-			return result.matches.length || regex.global ? result.matches : null;
-		} catch (error: any) {
-			if (error.message !== null && error.elapsedTimeMs !== null) return null;
-			this.logger.error(error);
-			this.logger.sentry.captureWithExtras(error, {
-				"Regular Expression": regex,
-				Content: content
-			});
-			return null;
-		}
 	}
 }

@@ -20,6 +20,7 @@
 	},
 	"homepage": "https://github.com/OtterDevelopment/PositivePeter#readme",
 	"dependencies": {
+		"@lukeed/ms": "^2.0.0",
 		"@sentry/node": "^6.15.0",
 		"@sentry/tracing": "^6.15.0",
 		"colorette": "^2.0.16",
