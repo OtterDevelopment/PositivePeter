@@ -3,7 +3,7 @@ import { ShardingManager } from "discord.js";
 import Config from "../config/bot.config.js";
 import Logger from "../lib/classes/Logger.js";
 
-load();
+load({ path: process.env.NODE_ENV === "development" ? ".env.dev" : ".env.prod" });
 
 const _version = process.env.NODE_ENV === "development" ? `${Config.version}-dev` : Config.version;
 
