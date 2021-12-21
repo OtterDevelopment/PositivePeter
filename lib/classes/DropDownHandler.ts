@@ -20,7 +20,6 @@ export default class DropdownHandler {
 				this.client.functions
 					.getFiles(`${this.client.__dirname}/dist/src/bot/dropDowns`, ".js")
 					.forEach(async (fileName) => {
-						console.log(parentFolder, fileName);
 						const dropDownFile = await import(
 							`../../src/bot/buttons/${parentFolder}/${fileName}`
 						);

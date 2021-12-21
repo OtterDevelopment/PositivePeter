@@ -31,9 +31,9 @@ export default class SlashCommandHandler {
 					})
 			);
 		return setTimeout(() => {
-			this.client.guilds.cache.forEach((guild) => {
+			this.client.guilds.cache.forEach(async (guild) => {
 				try {
-					guild.commands.set(
+					await guild.commands.set(
 						this.client.slashCommands.map((command) => {
 							return {
 								name: command.name,
@@ -46,7 +46,7 @@ export default class SlashCommandHandler {
 					if (error.code === 50001)
 						this.client.logger.error(
 							"",
-							`I encountered DiscordAPIError: Missing Access in ${guild.name} [${guild.name}] when trying to set slash commands!`
+							`I encountered DiscordAPIError: Missing Access in ${guild.name} [${guild.id}] when trying to set slash commands!`
 						);
 					else {
 						this.client.logger.error(error);
@@ -83,9 +83,9 @@ export default class SlashCommandHandler {
 				interaction
 			);
 
-			this.client.guilds.cache.forEach((guild) => {
+			this.client.guilds.cache.forEach(async (guild) => {
 				try {
-					guild.commands.delete(interaction.commandName);
+					await guild.commands.delete(interaction.commandName);
 				} catch (error: any) {
 					if (error.code === 50001)
 						this.client.logger.error(

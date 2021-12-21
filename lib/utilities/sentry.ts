@@ -1,10 +1,10 @@
 import { format } from "util";
 import { load } from "dotenv-extended";
 import * as Sentry from "@sentry/node";
-import { Interaction, Message } from "discord.js";
+import { Interaction } from "discord.js";
 import BetterMessage from "../extensions/BetterMessage";
 
-load();
+load({ path: process.env.NODE_ENV === "development" ? ".env.dev" : ".env.prod" });
 
 export default function init() {
 	Sentry.init({

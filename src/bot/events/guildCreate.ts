@@ -4,7 +4,7 @@ import EventHandler from "../../../lib/classes/EventHandler.js";
 export default class GuildCreate extends EventHandler {
 	override async run(guild: Guild) {
 		try {
-			guild.commands.set(
+			await guild.commands.set(
 				this.client.slashCommands.map((command) => {
 					return {
 						name: command.name,
