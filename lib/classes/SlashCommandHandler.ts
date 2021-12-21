@@ -45,7 +45,7 @@ export default class SlashCommandHandler {
 				} catch (error: any) {
 					if (error.code === 50001)
 						this.client.logger.error(
-							"",
+							null,
 							`I encountered DiscordAPIError: Missing Access in ${guild.name} [${guild.id}] when trying to set slash commands!`
 						);
 					else {
@@ -89,7 +89,7 @@ export default class SlashCommandHandler {
 				} catch (error: any) {
 					if (error.code === 50001)
 						this.client.logger.error(
-							"",
+							null,
 							`I encountered DiscordAPIError: Missing Access in ${guild.name} [${guild.name}] when trying to remove non existent slash command ${interaction.commandName}!`
 						);
 					else {

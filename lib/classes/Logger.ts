@@ -39,8 +39,10 @@ export class Logger {
 		);
 	}
 
-	public error(error: any, ...args: string | any) {
-		console.log(bold(bgRedBright(`[${this.timestamp}]`)), error, bold(format(...args)));
+	public error(error: any | null, ...args: string | any) {
+		if (error)
+			console.log(bold(bgRedBright(`[${this.timestamp}]`)), error, bold(format(...args)));
+		else console.log(bold(bgRedBright(`[${this.timestamp}]`)), bold(format(...args)));
 	}
 
 	public async webhookLog(type: string, options: WebhookMessageOptions) {
