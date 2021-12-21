@@ -1,0 +1,61 @@
+{
+	"suicide": [
+		"i wish i was never born",
+		"i want to die",
+		"kms",
+		"kill myself",
+		"im going to suffocate myself",
+		"im going to commit suicide",
+		"i just want to die",
+		"im planning on committing suicide",
+		"i took an overdose",
+		"i just want to die",
+		"time to die i guess",
+		"why am i alive",
+		"kill me",
+		"end me",
+		"i have trouble getting out of bed in the morning",
+		"killing myself",
+		"i want to commit suicide",
+		"i deserve to die",
+		"i want to disappear",
+		"cant wait to die",
+		"i dont want to be alive",
+		"i hate being alive",
+		"why am i not dead",
+		"wish i was dead",
+		"im going to jump off a building",
+		"hurt myself",
+		"hang myself",
+		"im suicidal",
+		"i dont want to live",
+		"shoot myself",
+		"cut myself",
+		"i dont want to live anymore",
+		"i kinda want to die"
+	],
+	"compliments": {
+		"im worthless": ["No you're not!", "You're priceless!", "You're worth more than diamonds!"],
+		"im not good enough": ["You're way more than enough!"],
+		"why am i not good enough": ["You're way more than enough!"],
+		"i cant do anything right": ["You're doing just fine!", "You're doing great!"],
+		"i suck": [
+			"No you don't, you're amazing!",
+			"Everyone has imperfections, you're great!",
+			"You're amazing!"
+		],
+		"im sad": ["Don't be sad, you're amazing!"],
+		"im trash": ["You're not trash, you're gold!", "No you're not, you're amazing!"],
+		"im dumb": [
+			"No you're not!",
+			"You're one of the smartest people I know!",
+			"You're extremely intelligent!"
+		],
+		"i'm an idiot": [
+			"No you're not!",
+			"You're one of the smartest people I know!",
+			"You're extremely intelligent!"
+		],
+		"I'm ugly": ["You're breathtaking!", "No you're not, you're amazing!"]
+	}
+}
