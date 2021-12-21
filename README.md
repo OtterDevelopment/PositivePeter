@@ -8,7 +8,7 @@ Self hosting Positive Peter is possible, just rename `.env.example` to .`env` an
 
 ## Credits
 
-[Geek](https://github.com/GamingGeek) @ [FireDiscordBot](https://github.com/) and the [widget](https://inv.wtf) below.
+[Geek](https://github.com/GamingGeek) @ [FireDiscordBot](https://github.com/): The [widget](https://inv.wtf) below.
 
 ## Join The Following Server For Support
 
