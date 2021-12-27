@@ -102,7 +102,6 @@ export default class BetterClient extends Client {
 			prefix: "positivePeter.",
 			defaultTags: [`env:${process.env.NODE_ENV}`]
 		});
-		// if (process.env.NODE_ENV === "production")
 		setInterval(() => {
 			this.dataDog.gauge("guilds", this.cachedStats.guilds);
 			this.dataDog.gauge("users", this.cachedStats.users);
