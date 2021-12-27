@@ -2,6 +2,7 @@ import EventHandler from "../../../lib/classes/EventHandler.js";
 
 export default class MessageCreate extends EventHandler {
 	override async run() {
+		this.client.dataDog.increment("events", 1, ["event:ready"]);
 		this.client.cache.loadCache();
 		const allGuilds = await this.client.shard?.broadcastEval((c) =>
 			c.guilds.cache.map(
@@ -24,5 +25,7 @@ export default class MessageCreate extends EventHandler {
 				} users.\n\n${guildsStringList.join("\n\n")}`
 			)}) and ${stats.users} users.`
 		);
+		this.client.dataDog.gauge("guilds", stats.guilds);
+		this.client.dataDog.gauge("users", stats.users);
 	}
 }

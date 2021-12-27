@@ -1,5 +1,8 @@
 import path from "path";
+import { readFileSync } from "fs";
 import { MongoClient } from "mongodb";
+import metrics from "datadog-metrics";
+import Cache from "../classes/Cache.js";
 import Button from "../classes/Button.js";
 import DropDown from "../classes/DropDown.js";
 import * as Logger from "../classes/Logger.js";
@@ -14,8 +17,7 @@ import DropDownHandler from "../classes/DropDownHandler.js";
 import { Client, ClientOptions, Collection } from "discord.js";
 import TextCommandHandler from "../classes/TextCommandHandler.js";
 import SlashCommandHandler from "../classes/SlashCommandHandler.js";
-import Cache from "../classes/Cache.js";
-import { readFileSync } from "fs";
+
 export default class BetterClient extends Client {
 	public usersUsingBot: Set<string>;
 	public readonly config;
@@ -37,6 +39,7 @@ export default class BetterClient extends Client {
 	public readonly __dirname: string;
 	public readonly cache: Cache;
 	public readonly triggers: { suicide: string[]; compliments: Record<string, string[]> };
+	public readonly dataDog: typeof metrics;
 	constructor(options: ClientOptions) {
 		super(options);
 
@@ -91,6 +94,13 @@ export default class BetterClient extends Client {
 		this.triggers = JSON.parse(
 			readFileSync(`${(this, this.__dirname)}/lib/utilities/triggers.json`).toString()
 		);
+
+		this.dataDog = metrics;
+		this.dataDog.init({
+			flushIntervalSeconds: 15,
+			apiKey: this.config.dataDog.apiKey,
+			prefix: "positivePeter.",
+		});
 	}
 
 	override async login() {

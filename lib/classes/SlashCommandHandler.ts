@@ -142,7 +142,10 @@ export default class SlashCommandHandler {
 		this.client.usersUsingBot.add(interaction.user.id);
 		command
 			.run(interaction)
-			.then(() => this.client.usersUsingBot.delete(interaction.user.id))
+			.then(() => {
+				this.client.usersUsingBot.delete(interaction.user.id);
+				this.client.dataDog.increment("slashCommandUsage", 1, [`command:${command.name}`]);
+			})
 			.catch(async (error): Promise<any> => {
 				this.client.logger.error(error);
 				const sentryId = await this.client.logger.sentry.captureWithInteraction(

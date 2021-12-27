@@ -63,7 +63,10 @@ export default class TextCommandHandler {
 		this.client.usersUsingBot.add(message.author.id);
 		command
 			.run(message, args)
-			.then(() => this.client.usersUsingBot.delete(message.author.id))
+			.then(() => {
+				this.client.usersUsingBot.delete(message.author.id);
+				this.client.dataDog.increment("textCommandUsage", 1, [`command:${command.name}`]);
+			})
 			.catch(async (error): Promise<any> => {
 				this.client.logger.error(error);
 				const sentryId = await this.client.logger.sentry.captureWithMessage(error, message);

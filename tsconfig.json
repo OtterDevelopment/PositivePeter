@@ -12,7 +12,6 @@
 		"moduleResolution": "Node",
 		"esModuleInterop": true,
 		"typeRoots": ["node_modules/@types", "typings/"],
-		"resolveJsonModule": true
 	},
 	"main": "src/index.ts",
 	"compileOnSave": true

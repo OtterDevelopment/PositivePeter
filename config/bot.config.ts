@@ -38,9 +38,10 @@ export default {
 		"USE_EXTERNAL_EMOJIS"
 	] as PermissionString[],
 
-	apiKeys: {},
+	defaultTriggerCount: 3,
 
-	emojis: {},
-
-	defaultTriggerCount: 3
+	dataDog: {
+		apiKey: process.env.DATADOG_API_KEY,
+		baseURL: "https://app.datadoghq.com/api/v1/",
+	}
 };

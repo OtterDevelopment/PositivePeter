@@ -4,6 +4,7 @@ import BetterMessage from "../../../lib/extensions/BetterMessage.js";
 
 export default class CheckSuicide extends EventHandler {
 	override async run(message: BetterMessage) {
+		this.client.dataDog.increment("events", 1, ["event:checkSuicide"]);
 		for (let trigger of this.client.triggers.suicide) {
 			if (
 				message.content
@@ -14,6 +15,7 @@ export default class CheckSuicide extends EventHandler {
 					.replace("do not", "")
 					.includes(trigger)
 			) {
+				this.client.dataDog.increment("suicide", 1, [`trigger:${trigger}`]);
 				const count =
 					(
 						await this.client.mongo
@@ -53,6 +55,9 @@ export default class CheckSuicide extends EventHandler {
 								]
 							)
 						);
+						this.client.dataDog.increment("directMessagesSent", 1, [
+							`trigger:${trigger}`
+						]);
 					} catch (error: any) {
 						if (error.code !== 50007) {
 							this.client.logger.error(error);
