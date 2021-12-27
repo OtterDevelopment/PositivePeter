@@ -31,40 +31,51 @@ export default class SlashCommandHandler {
 					})
 			);
 		return setTimeout(() => {
-			this.client.guilds.cache.forEach(async (guild) => {
-				try {
-					await guild.commands.set(
-						this.client.slashCommands.map((command) => {
-							return {
-								name: command.name,
-								description: command.description,
-								options: command.options
-							};
-						})
-					);
-				} catch (error: any) {
-					if (error.code === 50001)
-						this.client.logger.error(
-							null,
-							`I encountered DiscordAPIError: Missing Access in ${guild.name} [${guild.id}] when trying to set slash commands!`
-						);
-					else {
-						this.client.logger.error(error);
-						this.client.logger.sentry.captureWithExtras(error, {
-							Guild: guild.name,
-							"Guild ID": guild.id,
-							"Slash Command Count": this.client.slashCommands.size,
-							"Slash Commands": this.client.slashCommands.map((command) => {
+			if (process.env.NODE_ENV === "production")
+				this.client.application?.commands.set(
+					this.client.slashCommands.map((command) => {
+						return {
+							name: command.name,
+							description: command.description,
+							options: command.options
+						};
+					})
+				);
+			else
+				this.client.guilds.cache.forEach(async (guild) => {
+					try {
+						await guild.commands.set(
+							this.client.slashCommands.map((command) => {
 								return {
 									name: command.name,
 									description: command.description,
 									options: command.options
 								};
 							})
-						});
+						);
+					} catch (error: any) {
+						if (error.code === 50001)
+							this.client.logger.error(
+								null,
+								`I encountered DiscordAPIError: Missing Access in ${guild.name} [${guild.id}] when trying to set slash commands!`
+							);
+						else {
+							this.client.logger.error(error);
+							this.client.logger.sentry.captureWithExtras(error, {
+								Guild: guild.name,
+								"Guild ID": guild.id,
+								"Slash Command Count": this.client.slashCommands.size,
+								"Slash Commands": this.client.slashCommands.map((command) => {
+									return {
+										name: command.name,
+										description: command.description,
+										options: command.options
+									};
+								})
+							});
+						}
 					}
-				}
-			});
+				});
 		}, 5000);
 	}
 

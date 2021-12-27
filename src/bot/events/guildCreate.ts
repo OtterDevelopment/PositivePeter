@@ -7,29 +7,6 @@ export default class GuildCreate extends EventHandler {
 		const stats = await this.client.fetchStats();
 		this.client.dataDog.gauge("guilds", stats.guilds);
 		this.client.dataDog.gauge("users", stats.users);
-		try {
-			await guild.commands.set(
-				this.client.slashCommands.map((command) => {
-					return {
-						name: command.name,
-						description: command.description,
-						options: command.options
-					};
-				})
-			);
-		} catch (error: any) {
-			if (error.code === 50001)
-				this.client.logger.error(
-					null,
-					`I encountered DiscordAPIError: Missing Access in ${guild.name} [${guild.id}] when trying to set slash commands!`
-				);
-			else {
-				this.client.logger.error(error);
-				this.client.logger.sentry.captureWithExtras(error, {
-					guild: guild
-				});
-			}
-		}
 		this.client.logger.info(
 			`Joined guild ${guild.name} (${guild.id}) with ${guild.memberCount} members, now in ${stats.guilds} guilds(s)!`
 		);
