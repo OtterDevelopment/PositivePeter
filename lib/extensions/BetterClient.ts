@@ -99,18 +99,21 @@ export default class BetterClient extends Client {
 		this.dataDog.init({
 			flushIntervalSeconds: 0,
 			apiKey: this.config.dataDog.apiKey,
-			prefix: "positivePeter."
+			prefix: "positivePeter.",
+			defaultTags: [`env:${process.env.NODE_ENV}`]
 		});
-		if (process.env.NODE_ENV === "production")
-			setInterval(() => {
-				this.dataDog.flush(
-					() => this.logger.info(`Flushed information to DataDog.`),
-					(error) => {
-						this.logger.error(error);
-						this.logger.sentry.captureException(error);
-					}
-				);
-			}, 5000);
+		// if (process.env.NODE_ENV === "production")
+		setInterval(() => {
+			this.dataDog.gauge("guilds", this.cachedStats.guilds);
+			this.dataDog.gauge("users", this.cachedStats.users);
+			this.dataDog.flush(
+				() => this.logger.info(`Flushed information to DataDog.`),
+				(error) => {
+					this.logger.error(error);
+					this.logger.sentry.captureException(error);
+				}
+			);
+		}, 5000);
 	}
 
 	override async login() {
