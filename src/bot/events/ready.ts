@@ -4,7 +4,7 @@ export default class Ready extends EventHandler {
 	override async run() {
 		this.client.dataDog.increment("events", 1, ["event:ready"]);
 		this.client.cache.loadCache();
-		const allGuilds = await this.client.shard?.broadcastEval((c) =>
+		const allGuilds = await this.client.shard?.broadcastEval(async (c) =>
 			c.guilds.cache.map(
 				(guild) => `${guild.name} [${guild.id}] - ${guild.memberCount} members.`
 			)
@@ -25,5 +25,7 @@ export default class Ready extends EventHandler {
 				} users.\n\n${guildsStringList.join("\n\n")}`
 			)}) and ${stats.users} users.`
 		);
+		this.client.dataDog.gauge("guilds", stats.guilds);
+		this.client.dataDog.gauge("users", stats.users);
 	}
 }

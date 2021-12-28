@@ -105,14 +105,15 @@ export default class BetterClient extends Client {
 		setInterval(() => {
 			this.dataDog.gauge("guilds", this.cachedStats.guilds);
 			this.dataDog.gauge("users", this.cachedStats.users);
-			this.dataDog.flush(
-				() => this.logger.info(`Flushed information to DataDog.`),
-				(error) => {
-					this.logger.error(error);
-					this.logger.sentry.captureException(error);
-				}
-			);
-		}, 5000);
+			if (this.isReady())
+				this.dataDog.flush(
+					() => this.logger.info(`Flushed information to DataDog.`),
+					(error) => {
+						this.logger.error(error);
+						this.logger.sentry.captureException(error);
+					}
+				);
+		}, 10000);
 	}
 
 	override async login() {
@@ -139,7 +140,7 @@ export default class BetterClient extends Client {
 			return {
 				guilds: client.guilds.cache.size,
 				users: client.guilds.cache.reduce(
-					(previous, guild) => previous + guild.memberCount,
+					(previous, guild) => previous + (guild.memberCount ?? 0),
 					0
 				),
 				cachedUsers: client.users.cache.size,

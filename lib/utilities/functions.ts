@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import { createPaste } from "hastebin";
 import { permissionNames } from "./permissions.js";
 import { existsSync, mkdirSync, readdirSync } from "fs";
@@ -11,7 +12,6 @@ import {
 	User
 } from "discord.js";
 import { GeneratedMessage, GenerateTimestampOptions } from "../../typings";
-import { createHash } from "crypto";
 
 export default class Functions {
 	private client: BetterClient;
