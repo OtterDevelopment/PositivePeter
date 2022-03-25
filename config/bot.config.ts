@@ -17,7 +17,7 @@ export default {
 		activities: [
 			{
 				type: "PLAYING",
-				name: "#SandWithUkraine 🇺🇦"
+				name: "#StandWithUkraine 🇺🇦"
 			}
 		]
 	} as PresenceData,
