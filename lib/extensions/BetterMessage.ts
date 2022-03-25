@@ -1,18 +1,16 @@
-import BetterClient from "./BetterClient";
-import { RawMessageData } from "discord.js/typings/rawDataTypes";
 import { Message, MessagePayload, ReplyMessageOptions, Structures } from "discord.js";
 
 export default class BetterMessage extends Message {
-	constructor(client: BetterClient, data: RawMessageData) {
-		super(client, data);
-	}
-
+	/**
+	 * Better reply function, if the message is deleted, just send a normal message instead.
+	 * @param options The options for our reply.
+	 */
 	public override async reply(
 		options: string | MessagePayload | ReplyMessageOptions
 	): Promise<BetterMessage> {
 		try {
-			if (this.deleted) return this.channel.send(options);
-			else return this.reply(options);
+			if (this.deleted) return await this.channel.send(options);
+			else return await super.reply(options);
 		} catch {
 			return this.channel.send(options);
 		}

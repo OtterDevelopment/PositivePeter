@@ -1,9 +1,10 @@
 import { Intents, PermissionString, PresenceData } from "discord.js";
 
 export default {
-	prefix: "s!",
+	prefixes: process.env.NODE_ENV === "production" ? ["s!"] : ["s!!"],
+	botName: "Positive Peter",
 
-	version: "4.0.0",
+	version: "4.0.1",
 	admins: ["619284841187246090", "102102717165506560"],
 
 	supportServer: "https://discord.gg/VwMWj2B",
@@ -15,8 +16,8 @@ export default {
 		status: "online",
 		activities: [
 			{
-				type: "LISTENING",
-				name: "users"
+				type: "PLAYING",
+				name: "#SandWithUkraine 🇺🇦"
 			}
 		]
 	} as PresenceData,

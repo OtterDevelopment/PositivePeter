@@ -8,36 +8,30 @@
 		"build": "tsc && cross-env NODE_ENV=development node .",
 		"start": "cross-env NODE_ENV=production node ."
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/OtterDevelopment/PositivePeter.git"
-	},
-	"keywords": [],
-	"author": "xPolar",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/OtterDevelopment/PositivePeter/issues"
-	},
-	"homepage": "https://github.com/OtterDevelopment/PositivePeter#readme",
 	"dependencies": {
 		"@lukeed/ms": "^2.0.0",
 		"@sentry/node": "^6.15.0",
 		"@sentry/tracing": "^6.15.0",
-		"axios": "^0.24.0",
 		"colorette": "^2.0.16",
 		"datadog-metrics": "^0.9.3",
 		"discord.js": "github:FireDiscordBot/discord.js",
 		"dotenv-extended": "^2.9.0",
-		"hastebin": "^0.2.1",
-		"mongodb": "^4.2.0"
+		"mongodb": "^4.2.0",
+		"petitio": "^1.4.0"
 	},
 	"devDependencies": {
 		"@sentry/types": "^6.15.0",
 		"@types/datadog-metrics": "^0.6.2",
 		"@types/got": "^9.6.12",
 		"@types/node": "^16.11.9",
-		"@types/node-cron": "^3.0.0",
 		"cross-env": "^7.0.3",
+		"eslint": "^8.5.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-airbnb-typescript": "^16.1.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-import": "^2.25.3",
+		"eslint-plugin-prettier": "^4.0.0",
+		"prettier": "^2.5.1",
 		"typescript": "^4.5.2"
 	}
 }

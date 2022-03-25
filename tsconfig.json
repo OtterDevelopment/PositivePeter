@@ -1,18 +1,32 @@
 {
 	"compilerOptions": {
-		"target": "ES2020",
-		"module": "ES2020",
-		"outDir": "dist/",
-		"strict": true,
-		"alwaysStrict": true,
-		"noUncheckedIndexedAccess": true,
-		"noImplicitOverride": true,
-		"noFallthroughCasesInSwitch": true,
-		"lib": ["ESNext"],
-		"moduleResolution": "Node",
-		"esModuleInterop": true,
-		"typeRoots": ["node_modules/@types", "typings/"],
+	  "target": "ESNext",
+	  "module": "ESNext",
+	  "moduleResolution": "node",
+	  "lib": ["ESNext"],
+  
+	  "rootDir": ".",
+	  "outDir": "dist",
+  
+	  "strict": true,
+	  "alwaysStrict": true,
+	  "strictFunctionTypes": true,
+	  "strictNullChecks": true,
+	  "strictPropertyInitialization": true,
+  
+	  "forceConsistentCasingInFileNames": true,
+	  "noImplicitAny": true,
+	  "noImplicitThis": true,
+	  "noFallthroughCasesInSwitch": true,
+	  "noUnusedLocals": true,
+	  "noUnusedParameters": true,
+	  "noImplicitOverride": true,
+  
+	  "skipLibCheck": true,
+  
+	  "pretty": true,
+  
+	  "typeRoots": ["node_modules/@types", "typings/"]
 	},
-	"main": "src/index.ts",
-	"compileOnSave": true
-}
+	"main": "src/index.ts"
+  }

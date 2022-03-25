@@ -1,8 +1,7 @@
-import path from "path";
-import { readFileSync } from "fs";
+import { resolve } from "path";
 import { MongoClient } from "mongodb";
-import metrics from "datadog-metrics";
-import Cache from "../classes/Cache.js";
+import * as metrics from "datadog-metrics";
+import { Client, ClientOptions, Collection } from "discord.js";
 import Button from "../classes/Button.js";
 import DropDown from "../classes/DropDown.js";
 import * as Logger from "../classes/Logger.js";
@@ -14,36 +13,137 @@ import EventHandler from "../classes/EventHandler.js";
 import SlashCommand from "../classes/SlashCommand.js";
 import ButtonHandler from "../classes/ButtonHandler.js";
 import DropDownHandler from "../classes/DropDownHandler.js";
-import { Client, ClientOptions, Collection } from "discord.js";
 import TextCommandHandler from "../classes/TextCommandHandler.js";
 import SlashCommandHandler from "../classes/SlashCommandHandler.js";
+import AutoCompleteHandler from "../classes/AutoCompleteHandler.js";
+import AutoComplete from "../classes/AutoComplete.js";
+import Cache from "../classes/Cache.js";
+import { readFileSync } from "fs";
 
 export default class BetterClient extends Client {
+	/**
+	 * A set of users that are currently using the bot.
+	 */
 	public usersUsingBot: Set<string>;
+
+	/**
+	 * The config for our client.
+	 */
 	public readonly config;
+
+	/**
+	 * The functions for our client.
+	 */
 	public readonly functions: Functions;
+
+	/**
+	 * The logger for our client.
+	 */
 	public readonly logger: Logger.Logger;
+
+	/**
+	 * The slashCommandHandler for our client.
+	 */
 	public readonly slashCommandHandler: SlashCommandHandler;
+
+	/**
+	 * The slashCommands for our client.
+	 */
 	public slashCommands: Collection<string, SlashCommand>;
+
+	/**
+	 * The textCommandHandler for our client.
+	 */
 	public readonly textCommandHandler: TextCommandHandler;
+
+	/**
+	 * The textCommands for our client.
+	 */
 	public textCommands: Collection<string, TextCommand>;
+
+	/**
+	 * The buttonHandler for our client.
+	 */
 	public readonly buttonHandler: ButtonHandler;
+
+	/**
+	 * The buttons for our client.
+	 */
 	public buttons: Collection<string, Button>;
+
+	/**
+	 * The dropDownHandler for our client.
+	 */
 	public readonly dropDownHandler: DropDownHandler;
+
+	/**
+	 * The dropDowns for our client.
+	 */
 	public dropDowns: Collection<string, DropDown>;
+
+	/**
+	 * The autoCompleteHandler for our client.
+	 */
+	public readonly autoCompleteHandler: AutoCompleteHandler;
+
+	/**
+	 * The autoCompletes for our client.
+	 */
+	public autoCompletes: Collection<string, AutoComplete>;
+
+	/**
+	 * The events for our client.
+	 */
 	public events: Map<string, EventHandler>;
+
+	/**
+	 * Our MongoDB database.
+	 */
 	public readonly mongo: MongoClient;
-	public readonly version: string;
-	public stats: Stats;
-	public cachedStats: CachedStats;
-	public readonly __dirname: string;
-	public readonly cache: Cache;
-	public readonly triggers: { suicide: string[]; compliments: Record<string, string[]> };
+
+	/**
+	 * Our data dog client.
+	 */
 	public readonly dataDog: typeof metrics;
+
+	/**
+	 * The current version of our client.
+	 */
+	public readonly version: string;
+
+	/**
+	 * Our client's stats.
+	 */
+	public stats: Stats;
+
+	/**
+	 * Our client's cached stats.
+	 */
+	public cachedStats: CachedStats;
+
+	/**
+	 * __dirname is not in our version of ECMA, so we make do with a shitty fix.
+	 */
+	public readonly __dirname: string;
+
+	/**
+	 * Our Cache.
+	 */
+	public readonly cache: Cache;
+
+	/**
+	 * All of the triggers for the bot.
+	 */
+	public readonly triggers: { suicide: string[]; compliments: Record<string, string[]> };
+
+	/**
+	 * Create our client.
+	 * @param options The options for our client.
+	 */
 	constructor(options: ClientOptions) {
 		super(options);
 
-		this.__dirname = path.resolve();
+		this.__dirname = resolve();
 
 		this.usersUsingBot = new Set();
 		this.config = Config;
@@ -61,6 +161,9 @@ export default class BetterClient extends Client {
 
 		this.dropDownHandler = new DropDownHandler(this);
 		this.dropDowns = new Collection();
+
+		this.autoCompleteHandler = new AutoCompleteHandler(this);
+		this.autoCompletes = new Collection();
 
 		this.events = new Map();
 
@@ -86,8 +189,9 @@ export default class BetterClient extends Client {
 
 		this.dropDownHandler.loadDropDowns();
 		this.buttonHandler.loadButtons();
-		this.slashCommandHandler.loadCommands();
-		this.textCommandHandler.loadCommands();
+		this.slashCommandHandler.loadSlashCommands();
+		this.textCommandHandler.loadTextCommands();
+		this.autoCompleteHandler.loadAutoCompletes();
 		this.loadEvents();
 
 		this.cache = new Cache(this);
@@ -95,37 +199,47 @@ export default class BetterClient extends Client {
 			readFileSync(`${(this, this.__dirname)}/lib/utilities/triggers.json`).toString()
 		);
 
-		this.dataDog = metrics;
-		this.dataDog.init({
-			flushIntervalSeconds: 0,
-			apiKey: this.config.dataDog.apiKey,
-			prefix: "positivePeter.",
-			defaultTags: [`env:${process.env.NODE_ENV}`]
-		});
-		setInterval(() => {
-			this.dataDog.gauge("guilds", this.cachedStats.guilds);
-			this.dataDog.gauge("users", this.cachedStats.users);
-			if (this.isReady())
-				this.dataDog.flush(
-					() => this.logger.info(`Flushed information to DataDog.`),
-					(error) => {
-						this.logger.error(error);
-						this.logger.sentry.captureException(error);
-					}
-				);
-		}, 10000);
+		// @ts-ignore
+		this.dataDog = metrics.default;
+		if (this.config.dataDog.apiKey?.length) {
+			this.dataDog.init({
+				flushIntervalSeconds: 0,
+				apiKey: this.config.dataDog.apiKey,
+				prefix: `${this.config.botName}.`,
+				defaultTags: [`env:${process.env.NODE_ENV}`]
+			});
+			setInterval(() => {
+				this.dataDog.gauge("guilds", this.cachedStats.guilds);
+				this.dataDog.gauge("users", this.cachedStats.users);
+				if (this.isReady())
+					this.dataDog.flush(
+						() => this.logger.info(`Flushed information to DataDog.`),
+						(error) => {
+							this.logger.error(error);
+							this.logger.sentry.captureException(error);
+						}
+					);
+			}, 10000);
+		}
 	}
 
+	/**
+	 * Connect to MongoDB and login to Discord.
+	 */
 	override async login() {
 		await this.mongo.connect();
 		return super.login();
 	}
 
+	/**
+	 * Load all the events in the events directory.
+	 */
 	private loadEvents() {
 		return this.functions
-			.getFiles(`${(this, this.__dirname)}/dist/src/bot/events`, ".js", true)
+			.getFiles(`${this.__dirname}/dist/src/bot/events`, ".js", true)
 			.forEach(async (eventFileName) => {
 				const eventFile = await import(`./../../src/bot/events/${eventFileName}`);
+				// eslint-disable-next-line new-cap
 				const event: EventHandler = new eventFile.default(
 					this,
 					eventFileName.split(".js")[0]
@@ -135,6 +249,17 @@ export default class BetterClient extends Client {
 			});
 	}
 
+	/**
+	 * Reload all the events in the events directory.
+	 */
+	public reloadEvents() {
+		this.events.forEach((event) => event.removeListener());
+		this.loadEvents();
+	}
+
+	/**
+	 * Fetch all the stats for our client.
+	 */
 	public async fetchStats() {
 		const stats = await this.shard?.broadcastEval((client) => {
 			return {
@@ -153,8 +278,10 @@ export default class BetterClient extends Client {
 		});
 
 		const reducedStats = stats?.reduce((previous, current) => {
-			// @ts-ignore
-			Object.keys(current).forEach((key) => (previous[key] += current[key]));
+			Object.keys(current).forEach(
+				// @ts-ignore
+				(key) => (previous[key] += current[key])
+			);
 			return previous;
 		});
 		this.cachedStats = reducedStats || this.cachedStats;
