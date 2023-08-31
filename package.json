@@ -16,7 +16,7 @@
 		"datadog-metrics": "^0.9.3",
 		"discord.js": "github:FireDiscordBot/discord.js",
 		"dotenv-extended": "^2.9.0",
-		"mongodb": "^4.2.0"
+		"mongodb": "^4.17.0"
 	},
 	"devDependencies": {
 		"@sentry/types": "^6.15.0",
